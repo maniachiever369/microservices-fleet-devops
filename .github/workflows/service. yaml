@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: secure-web-service
+spec:
+  type: LoadBalancer    # This is the "Magic" line that creates a public URL
+  selector:
+    app: web-app        # This MUST match the labels in your deployment.yaml
+  ports:
+    - protocol: TCP
+      port: 80          # The port the world will use (e.g., http://your-site.com)
+      targetPort: 8080  # The port your secure container is listening on
