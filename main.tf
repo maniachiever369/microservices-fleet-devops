@@ -23,3 +23,4 @@ resource "aws_vpc" "devops_vpc" {
     Environment = "Dev"
   }
 }
+# Infrastructure complete - ready for plan
