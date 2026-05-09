@@ -1,16 +1,23 @@
-name: Docker Lint Check
+name: Docker Security & Lint Check
 
-on: [push]  # This tells the robot to run every time you push code
+on: [push]
 
 jobs:
-  check-docker:
+  build-and-scan:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Validate Dockerfile
-        run: |
-          echo "Checking Dockerfile syntax..."
-          docker build -t test-image .
-          echo "Success! Dockerfile is valid."
+      - name: Build Docker Image
+        run: docker build -t my-app-image:latest .
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'my-app-image:latest'
+          format: 'table'
+          exit-code: '1' # This stops the pipeline if bugs are found
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
