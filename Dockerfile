@@ -1,5 +1,5 @@
 # Use a lightweight web server as our base
-FROM nginx:alpine
+FROM nginx:1.25-alpine
 
 # Add a label for your professional profile
 LABEL maintainer="manikanta-kumar"
