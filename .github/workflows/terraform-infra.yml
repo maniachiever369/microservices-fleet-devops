@@ -1,4 +1,4 @@
-name: Terraform-Infra-Robot  # Changed the name so it stands out
+name: Terraform-Infra-Robot
 
 on:
   push:
@@ -18,4 +18,9 @@ jobs:
         run: terraform init
 
       - name: Terraform Plan
+        # We must attach the keys directly to the 'plan' command
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: "eu-west-2"
         run: terraform plan
