@@ -1,22 +1,21 @@
-# 1. Create the Internet Gateway (The physical 'door' to the internet)
-resource "aws_internet_gateway" "igw" {
-  vpc_id = aws_vpc.devops_vpc.id
+name: Terraform-Infra-Robot  # Changed the name so it stands out
 
-  tags = {
-    Name = "manikanta-igw"
-  }
-}
+on:
+  push:
+    branches: [ main ]
 
-# 2. Create a Route Table (The 'rules' for where traffic goes)
-resource "aws_route_table" "public_rt" {
-  vpc_id = aws_vpc.devops_vpc.id
+jobs:
+  terraform-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-  route {
-    cidr_block = "0.0.0.0/0" # This means 'all traffic'
-    gateway_id = aws_internet_gateway.igw.id
-  }
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
 
-  tags = {
-    Name = "manikanta-public-rt"
-  }
-}
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Plan
+        run: terraform plan
