@@ -1,12 +1,11 @@
-# Use a lightweight web server as our base
-FROM nginx:1.25-alpine
+# Using a 'Hardened' Bitnami image which is more secure than standard Nginx
+FROM bitnami/nginx:1.25
 
-# Add a label for your professional profile
-LABEL maintainer="manikanta-kumar"
+# Bitnami images run as non-root users (A key UK security requirement!)
+USER 1001
 
-# Create a custom landing page for your project
-RUN echo "<h1>Hello from Manikanta's DevOps Project!</h1>" > /usr/share/nginx/html/index.html
+# Add your custom message
+RUN echo "<h1>Hello from Manikanta's Secure DevOps Project!</h1>" > /opt/bitnami/nginx/html/index.html
 
-# Open port 80 for web traffic
-EXPOSE 80
-
+# Expose port 8080 (Bitnami uses 8080 instead of 80 for security)
+EXPOSE 8080
