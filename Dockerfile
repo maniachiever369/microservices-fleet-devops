@@ -1,11 +1,8 @@
-# Using a 'Hardened' Bitnami image which is more secure than standard Nginx
-FROM bitnami/nginx:1.25
 
-# Bitnami images run as non-root users (A key UK security requirement!)
-USER 1001
+# Step 1: Build stage (using a temporary image)
+FROM nginx:alpine AS builder
+RUN echo "<h1>Manikanta's Most Secure App</h1>" > /usr/share/nginx/html/index.html
 
-# Add your custom message
-RUN echo "<h1>Hello from Manikanta's Secure DevOps Project!</h1>" > /opt/bitnami/nginx/html/index.html
-
-# Expose port 8080 (Bitnami uses 8080 instead of 80 for security)
-EXPOSE 8080
+# Step 2: Final stage (using 'Distroless' for maximum security)
+FROM cgr.dev/chainguard/nginx:latest
+COPY --from=builder /usr/share/nginx/html/index.html /usr/share/nginx/html/index.html
